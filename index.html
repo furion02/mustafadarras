@@ -3,7 +3,7 @@
 <html lang="en-GB">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <link rel="canonical" href="">
         <meta property="og:title" content="Mustafa Darras">
@@ -34,7 +34,170 @@
 <link rel="stylesheet" type="text/css" href="https://assets.jwwb.nl/assets/website-rendering/styles.38328bb934a8a0e03d84.css?bust=43c503c24ea748cc3c1c" />
 <link rel="preconnect" href="https://assets.jwwb.nl" />
 <link rel="stylesheet" type="text/css" href="https://free-5613252.webadorsite.com/style?bust=1729479963" />    </head>
-    <body
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Roboto', sans-serif;
+        cursor: default;
+        background-color: #f0f2f5;
+    }
+
+    /* Chatbot Styles */
+    .chat-bot-container {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 300px;
+        max-height: 400px;
+        background: #ffffff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-radius: 12px;
+        overflow: hidden;
+        z-index: 9999;
+    }
+
+    .chat-box {
+        flex-grow: 1;
+        padding: 10px;
+        overflow-y: auto;
+        background: #f9f9f9;
+    }
+
+    .input-container {
+        display: flex;
+        padding: 10px;
+        background: #ffffff;
+    }
+
+    .input-container input {
+        flex-grow: 1;
+        padding: 10px;
+        border-radius: 20px;
+        border: 1px solid #dcdcdc;
+        font-size: 0.9em;
+    }
+
+    .input-container button {
+        padding: 10px 16px;
+        border-radius: 20px;
+        background-color: #02b9a7;
+        color: white;
+        margin-left: 10px;
+        cursor: pointer;
+    }
+
+    .chat-header {
+        background-color: #02b9a7;
+        color: white;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .close-chat {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.2em;
+        cursor: pointer;
+    }
+
+    .message-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .person-a {
+        justify-content: flex-start;
+    }
+
+    .person-a .avatar {
+        margin-right: 10px;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+    }
+
+    .person-a .message {
+        background: #e8f0fe;
+        color: #333;
+        border-radius: 10px;
+        padding: 10px;
+        max-width: 70%;
+    }
+
+    .person-b {
+        justify-content: flex-end;
+    }
+
+    .person-b .message {
+        background: #02b9a7;
+        color: #ffffff;
+        border-radius: 10px;
+        padding: 10px;
+        max-width: 70%;
+    }
+
+    /* Chat Icon */
+    #chat-icon {
+        display: flex; /* Ensure the chat icon is always displayed */
+        position: fixed;
+        bottom: 20px;
+        right: 20px; /* Keep it in the bottom-right corner */
+        width: 60px;
+        height: 60px;
+        background-color: #02b9a7;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+        z-index: 10000;
+    }
+
+    #chat-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+    .ai-badge {
+position: absolute;
+top: -10px;
+right: -10px;
+background: linear-gradient(135deg, #000000, #000000);
+color: #fff;
+font-size: 0.7em;
+font-weight: bold;
+padding: 6px 12px;
+border-radius: 50px;
+text-transform: uppercase;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+letter-spacing: 0.5px;
+display: inline-block;
+z-index: 10;
+text-align: center;
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ai-badge:hover {
+transform: translateY(-3px);
+box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+
+    
+</style>    
+<body
         id="top"
         class="jw-is-slideshow jw-header-is-text jw-is-segment-page jw-is-frontend jw-is-no-sidebar jw-is-no-messagebar jw-is-no-touch-device jw-is-no-mobile"
                                     data-jouwweb-page="23924873"
@@ -66,6 +229,7 @@
         >
             <span class="jw-icon-burger"></span>
         </button>
+        
     </div>
             <header class="header-wrap js-topbar-content-container js-fixed-header-container">
         <div class="header-wrap__inner">
@@ -92,21 +256,80 @@
         cursor: default;
         background-color: #f0f2f5;
     }
+/* Chatbot styles for devices 953px wide and smaller */
 
-    .chat-bot-container {
+/* Chatbot styles for mobile */
+@media screen and (max-width: 953px) {
+    /* Ensure chatbot visibility on mobile */
+    
+
+    /* Show chat icon by default */
+    #chat-icon {
+        display: flex;
         position: fixed;
         bottom: 20px;
         right: 20px;
-        width: 300px;
-        max-height: 400px;
-        background: #ffffff;
+        width: 60px;
+        height: 60px;
+        background-color: #02b9a7; /* Match branding */
+        border-radius: 50%;
+        justify-content: center;
+        align-items: center;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        border-radius: 12px;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        font-family: 'Roboto', sans-serif;
+        cursor: pointer;
+        z-index: 10000;
     }
+
+    #chat-icon img {
+        width: 80%;
+        height: 80%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    
+    .chat-header {
+        background-color: #02b9a7;
+        color: white;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .chat-box {
+        flex-grow: 1;
+        padding: 10px;
+        overflow-y: auto;
+        background: #f9f9f9;
+    }
+
+    .input-container {
+        display: flex;
+        padding: 10px;
+        background: #ffffff;
+    }
+
+    .input-container input {
+        flex-grow: 1;
+        padding: 10px;
+        border-radius: 20px;
+        border: 1px solid #dcdcdc;
+        font-size: 0.9em;
+    }
+
+    .input-container button {
+        padding: 10px 16px;
+        border-radius: 20px;
+        background-color: #02b9a7;
+        color: white;
+        margin-left: 10px;
+        cursor: pointer;
+    }
+}
+
+
+  
 
     .chat-box {
         flex-grow: 1;
@@ -149,6 +372,7 @@
         margin-right: 10px;
         position: relative;
     }
+    
 
     .person-b .message {
         background: #02b9a7;
@@ -194,93 +418,62 @@
     .input-container button:hover {
         background-color: #009688 ;
     }
+    .chat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #02b9a7;
+        color: white;
+        padding: 4px;
+        border-bottom: 1px solid #e6e6e6;
+        font-size: 1em;
+        font-weight: bold;
+    }
+    .close-chat {
+        background: none;
+        border: none;
+        color: rgb(0, 0, 0);
+        font-size: 1.2em;
+        cursor: pointer;
+        position: relative;
+        right: -260px;
+    }
+    .close-chat:hover {
+        color: #a2fff6;
+    }
+    .chat-icon {
+        display: none; /* Default state for larger screens */
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    cursor: pointer;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+    .chat-icon-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 </style>
 
 </head>
 
 <body>
-  <div class="chat-bot-container" id="chat-bot">
-    <div class="chat-box" id="chat-box">
-      <div class="person-a">
-        
-      </div>
-    </div>
-    <div class="input-container">
-      <input type="text" id="user-input" placeholder="Type a message...">
-      <button id="send-button">Send</button>
-    </div>
-  </div>
+<!-- Chat Icon -->
+<div id="chat-icon">
+    <img src="hero.jpg" alt="Chat Icon">
+    
+    <span class="ai-badge">AI</span>
+</div>
 
-  <script>
-    // Immediately request the initial elevator pitch when the chatbot is loaded
-    document.addEventListener("DOMContentLoaded", function () {
-        fetch('http://localhost:5000/initial_message')
-            .then(response => response.json())
-            .then(data => {
-                if (data.response) {
-                    addMessage(data.response, false);
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                addMessage("Sorry, there was an error loading the initial message.", false);
-            });
-    });
 
-    document.getElementById("send-button").addEventListener("click", function () {
-        const userInput = document.getElementById("user-input").value;
-        if (userInput.trim() !== "") {
-            addMessage(userInput, true);
-            document.getElementById("user-input").value = "";
 
-            // Send the user's message to the Flask backend
-            fetch('http://localhost:5000/chat', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ message: userInput })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.response) {
-                    addMessage(data.response, false);
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                addMessage("Sorry, there was an error processing your request.", false);
-            });
-        }
-    });
-
-    function addMessage(message, isUser) {
-        const chatBox = document.getElementById("chat-box");
-
-        // Create new message container
-        const messageContainer = document.createElement("div");
-        messageContainer.classList.add(isUser ? "person-b" : "person-a");
-
-        // Add icon for person-a if it's the bot's response
-        if (!isUser) {
-            const icon = document.createElement("div");
-            icon.classList.add("icon");
-            messageContainer.appendChild(icon);
-        }
-
-        // Create message element
-        const messageElement = document.createElement("div");
-        messageElement.classList.add("message");
-        messageElement.textContent = message;
-        messageContainer.appendChild(messageElement);
-
-        // Append the new message to the chat box
-        chatBox.appendChild(messageContainer);
-
-        // Scroll to the bottom of the chat box
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-</script>
 
 
 <style>
@@ -405,7 +598,7 @@
         <ul>
                     <li class="jw-slideshow-slide">
     <div data-key="0" data-text="&lt;span&gt;Shaping the Future, One Line of Code at a Time
-&lt;/span&gt;" data-subtext="" data-buttontext="Work With Me" data-buttonurl="/contact" data-buttontarget="_self" data-backdrop="1" data-layout="title-button" style="background-position: 50.00% 50.00%; background-image: url(&#039;https://i.vimeocdn.com/video/1386295442-52dd4d57a4b10b814cdac2c12ab3ad40ca8dd6e6948dce6303428c860835bf7b-d_1920x1080?r=pad&#039;);" data-background-position-x="0.5" data-background-position-y="0.5" class="jw-slideshow-slide-content jw-slideshow-slide-content--display-cover jw-slideshow-slide-content--backdrop jw-slideshow-slide-content--captions" >                                <div class="jw-slideshow-slide-container">
+&lt;/span&gt;" data-subtext="" data-buttontext="Work With Me" data-buttonurl="Website/cv.pdf" data-buttontarget="_self" data-backdrop="1" data-layout="title-button" style="background-position: 50.00% 50.00%; background-image: url(&#039;https://i.vimeocdn.com/video/1386295442-52dd4d57a4b10b814cdac2c12ab3ad40ca8dd6e6948dce6303428c860835bf7b-d_1920x1080?r=pad&#039;);" data-background-position-x="0.5" data-background-position-y="0.5" class="jw-slideshow-slide-content jw-slideshow-slide-content--display-cover jw-slideshow-slide-content--backdrop jw-slideshow-slide-content--captions" >                                <div class="jw-slideshow-slide-container">
                 <div
                     class="jw-slideshow-slide-video"
                     style="top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); padding-bottom: 56.25%"
@@ -431,7 +624,7 @@
 </span></div>
                                                     <a
                         class="jw-slideshow-btn jw-btn jw-btn--size-default"
-                        href="C:\Users\Dotaw\OneDrive\Desktop\Mustafa Darras Portfolio\COVER LETTERS\CV\Website\cv.pdf"
+                        href="cv.pdf"
                         target="_self"
                     >
                         <div class="jw-btn-caption">
@@ -1025,5 +1218,127 @@ class="jw-tree-node jw-element jw-image jw-node-is-first-child"
 <script src="https://assets.jwwb.nl/assets/website-rendering/runtime.83873eca6f8ea0bbcded.js?bust=967d40bf7c81bb2096a3" nonce="1f21244d0fc65f28f1c51ecf1c1e734c"></script>
 <script src="https://assets.jwwb.nl/assets/website-rendering/166.5a795a088a6b10acf59e.js?bust=d6e2cf922a8a672c588d" nonce="1f21244d0fc65f28f1c51ecf1c1e734c"></script>
 <script src="https://assets.jwwb.nl/assets/website-rendering/main.771eb34d07e711590d95.js?bust=5e271750ef1770517f01" nonce="1f21244d0fc65f28f1c51ecf1c1e734c"></script>
-<script src="https://www.webador.com/v2/unsafe-token/5613252" nonce="1f21244d0fc65f28f1c51ecf1c1e734c" async="1"></script>    </body>
+<script src="https://www.webador.com/v2/unsafe-token/5613252" nonce="1f21244d0fc65f28f1c51ecf1c1e734c" async="1"></script>    
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const chatIcon = document.getElementById("chat-icon");
+
+        chatIcon.addEventListener("click", function () {
+            createChatBot();
+            chatIcon.style.display = "none";
+        });
+
+        function createChatBot() {
+    const chatBotContainer = document.createElement("div");
+    chatBotContainer.classList.add("chat-bot-container");
+    chatBotContainer.id = "chat-bot";
+
+    chatBotContainer.innerHTML = `
+        <div class="chat-header">
+            <button class="close-chat" id="close-chat-btn" aria-label="Close chat">x</button>
+        </div>
+        <div class="chat-box" id="chat-box"></div>
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Type a message...">
+            <button id="send-button">Send</button>
+        </div>
+    `;
+
+    document.body.appendChild(chatBotContainer);
+
+    const closeChatBtn = chatBotContainer.querySelector("#close-chat-btn");
+    const sendButton = chatBotContainer.querySelector("#send-button");
+    const userInput = chatBotContainer.querySelector("#user-input");
+
+    closeChatBtn.addEventListener("click", function () {
+        chatBotContainer.remove();
+        chatIcon.style.display = "flex";
+    });
+
+    fetchIntroMessage(); // Fetch AI-generated intro message
+
+    sendButton.addEventListener("click", function () {
+        sendMessage();
+    });
+
+    // Add "Enter" key listener
+    userInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault(); // Prevent default action (e.g., form submission)
+            sendMessage();
+        }
+    });
+
+    function sendMessage() {
+        const message = userInput.value.trim();
+        if (message) {
+            addMessage(message, true);
+            userInput.value = "";
+
+            fetch('http://localhost:5000/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.modelMessage && data.modelMessage.message) {
+                    addMessage(data.modelMessage.message, false);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                addMessage("Sorry, there was an error processing your request.", false);
+            });
+        }
+    }
+}
+
+        function fetchIntroMessage() {
+            fetch('http://localhost:5000/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: "Tell me about Mustafa Darras in 1-2 sentences only, act like its an elevator pitch." })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.modelMessage && data.modelMessage.message) {
+                    addMessage(data.modelMessage.message, false);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                addMessage("Sorry, there was an error fetching the introductory message.", false);
+            });
+        }
+
+        function addMessage(message, isUser) {
+            const chatBox = document.getElementById("chat-box");
+
+            const messageContainer = document.createElement("div");
+            messageContainer.classList.add("message-container", isUser ? "person-b" : "person-a");
+
+            if (!isUser) {
+                const avatar = document.createElement("img");
+                avatar.src = "hero.jpg"; // Replace with the avatar image URL
+                avatar.alt = "Chatbot Avatar";
+                avatar.classList.add("avatar");
+                messageContainer.appendChild(avatar);
+            }
+
+            const messageElement = document.createElement("div");
+            messageElement.classList.add("message");
+            messageElement.textContent = message;
+
+            messageContainer.appendChild(messageElement);
+            chatBox.appendChild(messageContainer);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    });
+</script>
+</body>
 </html>
