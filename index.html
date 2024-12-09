@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en-GB">
     <head>
@@ -155,14 +154,14 @@
         right: 20px; /* Keep it in the bottom-right corner */
         width: 60px;
         height: 60px;
-        background-color: #f9f9f9;
         justify-content: center;
         align-items: center;
-        border-radius: 50%;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        
         cursor: pointer;
-        z-index: 10000;
+        
     }
+
+
 
     #chat-icon img {
         width: 100%;
@@ -264,23 +263,18 @@ box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 /* Chatbot styles for devices 953px wide and smaller */
 
 /* Chatbot styles for mobile */
-@media screen and (min-width: 953px) {
+@media screen and (max-width: 953px) {
     /* Ensure chatbot visibility on mobile */
     
 
     /* Show chat icon by default */
     #chat-icon {
-        display: flex !important;
-        position: ;
+        display: flex;
+        position: fixed;
         bottom: 20px;
         right: 20px;
         width: 60px;
         height: 60px;
-        background-color: #ffffff; /* Match branding */
-        border-radius: 50%;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         cursor: pointer;
         z-index: 10000;
     }
@@ -446,19 +440,6 @@ box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
     .close-chat:hover {
         color: #a2fff6;
     }
-    .chat-icon {
-        display: none; /* Default state for larger screens */
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-    cursor: pointer;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
 
     .chat-icon-image {
         width: 100%;
