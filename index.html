@@ -149,13 +149,13 @@
 
     /* Chat Icon */
     #chat-icon {
-        display: flex; /* Ensure the chat icon is always displayed */
+        display: flex ; /* Ensure the chat icon is always displayed */
         position: fixed;
         bottom: 20px;
         right: 20px; /* Keep it in the bottom-right corner */
         width: 60px;
         height: 60px;
-        background-color: #02b9a7;
+        background-color: #f9f9f9;
         justify-content: center;
         align-items: center;
         border-radius: 50%;
@@ -219,6 +219,11 @@ box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
                     Mustafa Darras                </div>
                     
                     </span>
+                    <div id="chat-icon">
+                        <img src="hero.jpg" alt="Chat Icon">
+                        
+                        <span class="ai-badge">AI</span>
+                    </div>
     </div>
 
     
@@ -259,19 +264,19 @@ box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 /* Chatbot styles for devices 953px wide and smaller */
 
 /* Chatbot styles for mobile */
-@media screen and (max-width: 953px) {
+@media screen and (min-width: 953px) {
     /* Ensure chatbot visibility on mobile */
     
 
     /* Show chat icon by default */
     #chat-icon {
-        display: flex;
-        position: fixed;
+        display: flex !important;
+        position: ;
         bottom: 20px;
         right: 20px;
         width: 60px;
         height: 60px;
-        background-color: #02b9a7; /* Match branding */
+        background-color: #ffffff; /* Match branding */
         border-radius: 50%;
         justify-content: center;
         align-items: center;
