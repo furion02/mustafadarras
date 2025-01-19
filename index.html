@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en-GB">
     <head>
@@ -34,150 +33,152 @@
 <link rel="stylesheet" type="text/css" href="https://assets.jwwb.nl/assets/website-rendering/styles.38328bb934a8a0e03d84.css?bust=43c503c24ea748cc3c1c" />
 <link rel="preconnect" href="https://assets.jwwb.nl" />
 <link rel="stylesheet" type="text/css" href="https://free-5613252.webadorsite.com/style?bust=1729479963" />    </head>
-<script>
-const express = require('express');
-const cors = require('cors');
-const fs = require('fs');
-const path = require('path');
-const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-const app = express();
-const PORT = 5000; // Directly set the port
-
-// Define and use the API key
-const API_KEY = "AIzaSyBqiMxEU2V-ayLt8LiGVD60ZfBv-0TJ6UI";
-
-// Chatbot system instructions
-const systemInstruction = `
-You are Mustafa Darras, an accomplished Computer Science student at Toronto Metropolitan University with a strong foundation in web development, data science, and software engineering. You are an Ai Expert
-
-Speak as if you are Mustafa, in the first person, and respond concisely with 1-2 sentences. If asked about the chatbot, mention it was built using Google Generative AI. If asked about your skills, projects, or background, respond as yourself, keeping answers short and focused.
-
-Remember:
-- Answer questions in 1-2 sentences.
-- Use a friendly, knowledgeable tone.
-- Provide quick insights into your skills, projects, and academic history.
-- Speak as yourself, Mustafa Darras, referring directly to your experience.
-
-You are Mustafa Darras. Answer as yourself.
-`;
-
-let model;
-try {
-  console.log("Initializing GoogleGenerativeAI...");
-  const genAI = new GoogleGenerativeAI(API_KEY);
-  model = genAI.getGenerativeModel({ 
-    model: "gemini-exp-1114", 
-    safetySettings: [], 
-    systemInstruction 
-  });
-  console.log("GoogleGenerativeAI initialized successfully.");
-} catch (error) {
-  console.error("Failed to initialize GoogleGenerativeAI:", error);
-  process.exit(1); // Exit if initialization fails
-}
-
-app.use(cors({
-  origin: '*',  // Allow all origins; restrict if needed
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type']
-}));
-
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public'))); // Serve static files
-
-// Load chat history
-let chatHistory = [];
-try {
-  const data = fs.readFileSync(path.resolve(__dirname, 'chat_history.json'), 'utf-8');
-  const jsonHistory = JSON.parse(data);
-  chatHistory.push(...jsonHistory.map(entry => ({
-    role: entry.role,
-    parts: [{ text: entry.message }]
-  })));
-  console.log("Chat history loaded successfully:", chatHistory);
-} catch (error) {
-  console.warn("Chat history not found or invalid. Starting with an empty history.");
-}
-
-console.log("Starting chat with initial history...");
-const chat = model.startChat({ history: chatHistory });
-
-// Serve index.html
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-// Chat endpoint
-app.post('/chat', async (req, res) => {
-  const { message } = req.body;
-
-  if (!message || typeof message !== 'string' || message.trim() === '') {
-    console.warn("Received an empty message from client.");
-    return res.status(400).json({ error: "Message cannot be empty." });
-  }
-
-  try {
-    console.log("Sending message to AI model:", message);
-    const result = await chat.sendMessage(message);
-    const modelResponse = result.response; // Ensure correct access to model response
-    console.log("Model response text:", modelResponse);
-
-    res.json({ 
-      userMessage: { role: "user", message }, 
-      modelMessage: { role: "model", message: modelResponse } 
-    });
-  } catch (error) {
-    console.error("Error generating response from AI model:", error);
-    res.status(500).json({ error: "Failed to get response from AI model" });
-  }
-});
-
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
-
-</script>
-<style>
+<style>@keyframes opacity-bounce { 
+    0% {opacity: 0;transform: translateY(100%); } 
+    60% { transform: translateY(-20%); } 
+    100% { opacity: 1; transform: translateY(0); }
+  }</style>
+  <style>
     * {
         box-sizing: border-box;
     }
 
     body {
         margin: 0;
-        font-family: 'Roboto', sans-serif;
-        cursor: default;
-        background-color: #f0f2f5;
+        font-family: "Georgia", serif; /* Match your webpage's font */
+        background-color: #f8f8f8;
     }
 
-    /* Chatbot Styles */
-    .chat-bot-container {
-        display: flex;
-        flex-direction: column;
+    /* Chatbot Icon */
+    .chatbot-icon {
         position: fixed;
         bottom: 20px;
         right: 20px;
-        width: 300px;
-        max-height: 400px;
-        background: #ffffff;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        border-radius: 12px;
-        overflow: hidden;
-        z-index: 9999;
+        width: 60px;
+        height: 60px;
+        background-image: url('hero.jpg'); /* Replace with your chatbot icon image */
+        background-size: cover;
+        background-position: center;
+        border: 2px solid #eaeaea;
+        border-radius: 50%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        z-index: 1000;
     }
 
+    /* AI Flair Badge */
+    .chatbot-icon::after {
+        content: "AI";
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: #1a1a1a; /* Dark color for visibility */
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 3px 6px;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        z-index: 1001;
+    }
+
+    /* Chatbot Container */
+    .chat-bot-container {
+        position: fixed;
+        bottom: 20px; /* Matches the icon's position */
+        right: 20px; /* Matches the icon's position */
+        width: 350px; /* Fixed width for consistent size */
+        height: 500px; /* Fixed height */
+        background: #ffffff; /* Match page background */
+        border: 1px solid #eaeaea; /* Subtle border */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        display: none; /* Hidden by default */
+        flex-direction: column;
+        z-index: 1001;
+    }
+
+    /* Chat Header */
+    .chat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        background: #1a1a1a; /* Match dark theme header */
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .chat-header button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 22px;
+        cursor: pointer;
+    }
+
+    /* Chat Box */
     .chat-box {
         flex-grow: 1;
-        padding: 10px;
+        padding: 10px 15px;
         overflow-y: auto;
-        background: #f9f9f9;
+        background: #f9f9f9; /* Light background for readability */
     }
 
+    /* Messages */
+    .message {
+        display: inline-block; /* Adjusts width to the text content */
+        max-width: 75%; /* Ensures messages don't exceed a readable width */
+        border-radius: 15px;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        font-size: 14px;
+        line-height: 1.6;
+        word-wrap: break-word; /* Handles long words */
+    }
+
+    .person-a {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 15px;
+    }
+
+    .person-a img {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        margin-right: 10px;
+        border: 1px solid #eaeaea;
+    }
+
+    .person-a .message {
+        background: #eef3fc;
+        color: #333;
+        border: 1px solid #dcdcdc;
+    }
+
+    .person-b {
+        display: flex;
+        justify-content: flex-end; /* Aligns user message to the right */
+        margin-bottom: 15px;
+    }
+
+    .person-b .message {
+        background: #1a1a1a; /* Dark color to match header */
+        color: #ffffff;
+        border: 1px solid #333;
+        text-align: right;
+    }
+
+    /* Input Container */
     .input-container {
         display: flex;
         padding: 10px;
         background: #ffffff;
+        border-top: 1px solid #eaeaea;
     }
 
     .input-container input {
@@ -185,122 +186,41 @@ app.listen(PORT, () => {
         padding: 10px;
         border-radius: 20px;
         border: 1px solid #dcdcdc;
-        font-size: 0.9em;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.3s;
+        font-family: "Georgia", serif; /* Match page font */
+    }
+
+    .input-container input:focus {
+        border-color: #1a1a1a; /* Match header color */
     }
 
     .input-container button {
-        padding: 10px 16px;
-        border-radius: 20px;
-        background-color: #02b9a7;
-        color: white;
         margin-left: 10px;
-        cursor: pointer;
-    }
-
-    .chat-header {
-        background-color: #02b9a7;
-        color: white;
-        padding: 10px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .close-chat {
-        background: none;
+        padding: 10px 15px;
+        border-radius: 20px;
         border: none;
+        background: #1a1a1a;
         color: white;
-        font-size: 1.2em;
+        font-size: 14px;
         cursor: pointer;
+        transition: background-color 0.3s;
     }
 
-    .message-container {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
+    .input-container button:hover {
+        background: #333;
     }
 
-    .person-a {
-        justify-content: flex-start;
+    @media (max-width: 768px) {
+        .chat-bot-container {
+            width: 90%; /* Slightly larger on smaller screens */
+            bottom: 20px;
+            right: 5%;
+            height: 400px; /* Adjust height for small screens */
+            border-radius: 10px;
+        }
     }
-
-    .person-a .avatar {
-        margin-right: 10px;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        object-fit: cover;
-    }
-
-    .person-a .message {
-        background: #e8f0fe;
-        color: #333;
-        border-radius: 10px;
-        padding: 10px;
-        max-width: 70%;
-    }
-
-    .person-b {
-        justify-content: flex-end;
-    }
-
-    .person-b .message {
-        background: #02b9a7;
-        color: #ffffff;
-        border-radius: 10px;
-        padding: 10px;
-        max-width: 70%;
-    }
-
-    /* Chat Icon */
-    #chat-icon {
-        display: flex ; /* Ensure the chat icon is always displayed */
-        position: fixed;
-        bottom: 20px;
-        right: 20px; /* Keep it in the bottom-right corner */
-        width: 60px;
-        height: 60px;
-        background-color: #f9f9f9;
-        justify-content: center;
-        align-items: center;
-        border-radius: 50%;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        cursor: pointer;
-        z-index: 10000;
-    }
-
-    #chat-icon img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-    }
-    .ai-badge {
-position: absolute;
-top: -10px;
-right: -10px;
-background: linear-gradient(135deg, #000000, #000000);
-color: #fff;
-font-size: 0.7em;
-font-weight: bold;
-padding: 6px 12px;
-border-radius: 50px;
-text-transform: uppercase;
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-letter-spacing: 0.5px;
-display: inline-block;
-z-index: 10;
-text-align: center;
-transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.ai-badge:hover {
-transform: translateY(-3px);
-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-}
-
-
-    
 </style>    
 <body
         id="top"
@@ -368,135 +288,7 @@ box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 
   
 
-    .chat-box {
-        flex-grow: 1;
-        padding: 15px;
-        overflow-y: auto;
-        background: #f9f9f9;
-        border-bottom: 1px solid #e6e6e6;
-    }
-
-    .message {
-        width: auto;
-        max-width: 80%;
-        border-radius: 10px;
-        padding: 10px;
-        margin-bottom: 10px;
-        font-size: 0.9em;
-        line-height: 1.4;
-    }
-
-    .person-a .message {
-        background: #e8f0fe;
-        color: #333;
-        align-self: flex-start;
-        text-align: left;
-    }
-
-    .person-a {
-        display: flex;
-        align-items: flex-start;
-    }
-
-    .icon {
-        --size: 35px;
-        width: var(--size);
-        height: var(--size);
-        background:url(hero.jpg);
-        background-position: center;
-        background-size: cover;
-        border-radius: 100%;
-        margin-right: 10px;
-        position: relative;
-    }
     
-
-    .person-b .message {
-        background: #02b9a7;
-        color: #ffffff;
-        align-self: flex-end;
-        text-align: right;
-        margin-left: auto;
-    }
-
-    .person-b {
-        display: flex;
-        align-items: flex-end;
-        justify-content: flex-end;
-    }
-
-    .input-container {
-        display: flex;
-        padding: 10px;
-        background: #ffffff;
-        border-top: 1px solid #e6e6e6;
-    }
-
-    .input-container input {
-        flex-grow: 1;
-        padding: 10px;
-        border-radius: 20px;
-        border: 1px solid #dcdcdc;
-        font-size: 0.9em;
-    }
-
-    .input-container button {
-        padding: 10px 16px;
-        border-radius: 20px;
-        border: none;
-        background-color: #02b9a7 ;
-        color: white;
-        cursor: pointer;
-        font-size: 0.9em;
-        margin-left: 10px;
-        transition: background-color 0.3s;
-    }
-
-    .input-container button:hover {
-        background-color: #009688 ;
-    }
-    .chat-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: #02b9a7;
-        color: white;
-        padding: 4px;
-        border-bottom: 1px solid #e6e6e6;
-        font-size: 1em;
-        font-weight: bold;
-    }
-    .close-chat {
-        background: none;
-        border: none;
-        color: rgb(0, 0, 0);
-        font-size: 1.2em;
-        cursor: pointer;
-        position: relative;
-        right: -260px;
-    }
-    .close-chat:hover {
-        color: #a2fff6;
-    }
-    .chat-icon {
-        display: none; /* Default state for larger screens */
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-    cursor: pointer;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-    .chat-icon-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
 </style>
 
 </head>
@@ -683,11 +475,22 @@ box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
             </style>
         <!-- Chat Icon -->
-<div id="chat-icon">
-    <img src="hero.jpg" alt="Chat Icon">
-    
-    <span class="ai-badge">AI</span>
-</div>
+<!-- Chatbot Icon -->
+<div class="chatbot-icon" id="chatbot-icon"></div>
+
+<!-- Chatbot Container -->
+<div class="chat-bot-container" id="chat-bot">
+    <div class="chat-header">
+        <span>Ask Me Anything</span>
+        <button id="close-chatbot">&times;</button>
+    </div>
+    <div class="chat-box" id="chat-box">
+        <!-- Messages will go here -->
+    </div>
+    <div class="input-container">
+        <input type="text" id="user-input" placeholder="Type a message...">
+        <button id="send-button">Send</button>
+    </div>
 </div>
 
 <script nonce="1f21244d0fc65f28f1c51ecf1c1e734c">
@@ -1258,123 +1061,109 @@ class="jw-tree-node jw-element jw-image jw-node-is-first-child"
 <script src="https://assets.jwwb.nl/assets/website-rendering/main.771eb34d07e711590d95.js?bust=5e271750ef1770517f01" nonce="1f21244d0fc65f28f1c51ecf1c1e734c"></script>
 <script src="https://www.webador.com/v2/unsafe-token/5613252" nonce="1f21244d0fc65f28f1c51ecf1c1e734c" async="1"></script>    
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const chatIcon = document.getElementById("chat-icon");
+    const chatbotIcon = document.getElementById('chatbot-icon');
+    const chatBot = document.getElementById('chat-bot');
+    const closeChatbot = document.getElementById('close-chatbot');
+    const chatBox = document.getElementById('chat-box');
+    const sendButton = document.getElementById('send-button');
+    const userInput = document.getElementById('user-input');
 
-        chatIcon.addEventListener("click", function () {
-            createChatBot();
-            chatIcon.style.display = "none";
-        });
+    const backendUrl = 'https://mdarras.pythonanywhere.com'; // Update with your actual domain
 
-        function createChatBot() {
-    const chatBotContainer = document.createElement("div");
-    chatBotContainer.classList.add("chat-bot-container");
-    chatBotContainer.id = "chat-bot";
-
-    chatBotContainer.innerHTML = `
-        <div class="chat-header">
-            <button class="close-chat" id="close-chat-btn" aria-label="Close chat">x</button>
-        </div>
-        <div class="chat-box" id="chat-box"></div>
-        <div class="input-container">
-            <input type="text" id="user-input" placeholder="Type a message...">
-            <button id="send-button">Send</button>
-        </div>
-    `;
-
-    document.body.appendChild(chatBotContainer);
-
-    const closeChatBtn = chatBotContainer.querySelector("#close-chat-btn");
-    const sendButton = chatBotContainer.querySelector("#send-button");
-    const userInput = chatBotContainer.querySelector("#user-input");
-
-    closeChatBtn.addEventListener("click", function () {
-        chatBotContainer.remove();
-        chatIcon.style.display = "flex";
+    chatbotIcon.addEventListener('click', () => {
+        chatBot.style.display = 'flex';
+        chatbotIcon.style.display = 'none';
     });
 
-    fetchIntroMessage(); // Fetch AI-generated intro message
-
-    sendButton.addEventListener("click", function () {
-        sendMessage();
+    closeChatbot.addEventListener('click', () => {
+        chatBot.style.display = 'none';
+        chatbotIcon.style.display = 'block';
     });
 
-    // Add "Enter" key listener
-    userInput.addEventListener("keydown", function (event) {
-        if (event.key === "Enter") {
-            event.preventDefault(); // Prevent default action (e.g., form submission)
-            sendMessage();
-        }
+    sendButton.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
     });
 
     function sendMessage() {
         const message = userInput.value.trim();
         if (message) {
             addMessage(message, true);
-            userInput.value = "";
+            userInput.value = '';
 
-            fetch('http://localhost:5000/chat', {
+            addTypingIndicator();
+
+            fetch(`${backendUrl}/chat`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ message })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: message }),
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.modelMessage && data.modelMessage.message) {
-                    addMessage(data.modelMessage.message, false);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                addMessage("Sorry, there was an error processing your request.", false);
-            });
+                .then(response => response.json())
+                .then(data => {
+                    removeTypingIndicator();
+                    if (data.response) {
+                        addMessage(data.response, false);
+                    } else if (data.error) {
+                        addMessage(`Error: ${data.error}`, false);
+                    }
+                })
+                .catch(() => {
+                    removeTypingIndicator();
+                    addMessage('Error: Unable to communicate with the server.', false);
+                });
         }
     }
-}
 
-        function fetchIntroMessage() {
-            fetch('http://localhost:5000/chat', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ message: "Tell me about Mustafa Darras in 1-2 sentences only, act like its an elevator pitch." })
-            })
+    function addMessage(message, isUser) {
+        const messageContainer = document.createElement('div');
+        messageContainer.className = isUser ? 'person-b' : 'person-a';
+
+        if (!isUser) {
+            const botImage = document.createElement('img');
+            botImage.src = 'hero.jpg'; // Replace with the path to your bot's image
+            botImage.alt = 'AI';
+            messageContainer.appendChild(botImage);
+        }
+
+        const messageElement = document.createElement('div');
+        messageElement.className = 'message';
+        messageElement.textContent = message;
+
+        messageContainer.appendChild(messageElement);
+        chatBox.appendChild(messageContainer);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function addTypingIndicator() {
+        const typingIndicator = document.createElement('div');
+        typingIndicator.className = 'person-a';
+        typingIndicator.id = 'typing-indicator';
+
+        const messageElement = document.createElement('div');
+        messageElement.className = 'message';
+        messageElement.textContent = 'Typing...';
+
+        typingIndicator.appendChild(messageElement);
+        chatBox.appendChild(typingIndicator);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+        const typingIndicator = document.getElementById('typing-indicator');
+        if (typingIndicator) chatBox.removeChild(typingIndicator);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch(`${backendUrl}/initial_message`)
             .then(response => response.json())
             .then(data => {
-                if (data.modelMessage && data.modelMessage.message) {
-                    addMessage(data.modelMessage.message, false);
+                if (data.response) {
+                    addMessage(data.response, false);
                 }
             })
-            .catch(error => {
-                console.error('Error:', error);
+            .catch(() => {
+                addMessage('Error: Unable to load initial message.', false);
             });
-        }
-
-        function addMessage(message, isUser) {
-            const chatBox = document.getElementById("chat-box");
-
-            const messageContainer = document.createElement("div");
-            messageContainer.classList.add("message-container", isUser ? "person-b" : "person-a");
-
-            if (!isUser) {
-                const avatar = document.createElement("img");
-                avatar.src = "hero.jpg"; // Replace with the avatar image URL
-                avatar.alt = "Chatbot Avatar";
-                avatar.classList.add("avatar");
-                messageContainer.appendChild(avatar);
-            }
-
-            const messageElement = document.createElement("div");
-            messageElement.classList.add("message");
-            messageElement.textContent = message;
-
-            messageContainer.appendChild(messageElement);
-            chatBox.appendChild(messageContainer);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
     });
 </script>
 </body>
